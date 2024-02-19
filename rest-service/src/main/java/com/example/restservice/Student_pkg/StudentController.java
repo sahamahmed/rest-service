@@ -1,27 +1,29 @@
-package com.example.restservice;
+package com.example.restservice.Student_pkg;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class FirstController {
+public class StudentController {
     private final StudentService service;
-    public FirstController(StudentService service) {
+    public StudentController(StudentService service) {
         this.service = service;
     }
     @PostMapping("/students")
-    public Student createStudent(@RequestBody Student student){
-        return service.post(student);
+    public StudentResponseDto createStudent(
+            @RequestBody StudentDto dto ){
+
+        return service.post(dto);
     }
 
     @GetMapping("/students")
-    public List<Student> findAllStudents(){
+    public List<StudentResponseDto> findAllStudents(){
         return service.findAllStudents();
     }
 
     @GetMapping("/students/{Student-id}")
-    public Student findbyId(@PathVariable("Student-id") Integer id){
+    public StudentResponseDto findbyId(@PathVariable("Student-id") Integer id){
         return service.findById(id);
     }
 

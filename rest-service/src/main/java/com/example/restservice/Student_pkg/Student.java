@@ -1,5 +1,8 @@
-package com.example.restservice;
+package com.example.restservice.Student_pkg;
 
+import com.example.restservice.School_pkg.School;
+import com.example.restservice.StudentProfile_pkg.StudentProfile;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 @Entity
@@ -15,6 +18,15 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Status status = Status.ACTIVE;
 
+    @OneToOne(
+            mappedBy = "student",
+            cascade = CascadeType.ALL
+    )
+    private StudentProfile studentProfile;
+    @ManyToOne
+    @JoinColumn(name = "school_id")
+    @JsonBackReference
+    private School school;
     public Student() {
     }
 
@@ -71,5 +83,21 @@ public class Student {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
+    }
+
+    public School getSchool() {
+        return school;
+    }
+
+    public void setSchool(School school) {
+        this.school = school;
     }
 }

@@ -1,25 +1,33 @@
-package com.example.restservice;
+package com.example.restservice.Student_pkg;
 
 import org.springframework.stereotype.Service;
 
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
     private final StudentRepository repository;
-
-    public StudentService(StudentRepository repository) {
+    private final StudentMapper mapper;
+    public StudentService(StudentRepository repository, StudentMapper mapper) {
         this.repository = repository;
-    }
-    public Student findById(Integer id) {
-        return repository.findByIdAndStatus(id, Status.ACTIVE)
-                .orElse(new Student());
+        this.mapper = mapper;
     }
 
-    public List<Student> findAllStudents(){
-        return repository.findByStatus(Status.ACTIVE);
+    public StudentResponseDto findById(Integer id) {
+        Student student = repository.findByIdAndStatus(id, Status.ACTIVE)
+                .orElse(new Student());
+        return mapper.tostudentResponseDto(student);
+    }
+
+
+    public List<StudentResponseDto> findAllStudents(){
+        return repository.findByStatus(Status.ACTIVE)
+                .stream()
+                .map(mapper::tostudentResponseDto)
+                .collect(Collectors.toList());
     }
 
     public void delete(Integer id){
@@ -30,9 +38,14 @@ public class StudentService {
         });
     }
 
-    public Student post(Student student){
-        return repository.save(student);
+
+    public StudentResponseDto post(StudentDto dto){
+        var student = mapper.toStudent(dto);
+        var savedStudent = repository.save(student);
+        return mapper.tostudentResponseDto(savedStudent);
     }
+
+
 
     public Student updateStudent(
             Integer id,

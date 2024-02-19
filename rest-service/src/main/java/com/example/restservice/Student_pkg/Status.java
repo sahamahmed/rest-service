@@ -1,4 +1,4 @@
-package com.example.restservice;
+package com.example.restservice.Student_pkg;
 
 public enum Status {
     ACTIVE,
