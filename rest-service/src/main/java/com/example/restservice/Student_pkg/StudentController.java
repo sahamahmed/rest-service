@@ -1,6 +1,7 @@
 package com.example.restservice.Student_pkg;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -36,9 +37,15 @@ public class StudentController {
 
     @PutMapping("/students/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Student updateStudent(@PathVariable("id") Integer id, @RequestBody Student updatedStudent) {
-        return service.updateStudent(id , updatedStudent);
+    public StudentResponseDto updateStudent(@PathVariable("id") Integer id, @RequestBody StudentDto dto) {
+        return service.updateStudent(id , dto);
     }
 
-
+    @PutMapping("/student/{std-Id}/subject/{sub-id}")
+            public Student assignSubjectToStudent(
+                    @PathVariable("std-Id") Integer student_Id,
+                    @PathVariable("sub-id") Integer subject_id
+    ){
+        return service.assignSubjectToStudent(student_Id , subject_id);
+    }
 }

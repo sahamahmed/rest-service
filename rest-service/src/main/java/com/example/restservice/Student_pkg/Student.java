@@ -1,9 +1,14 @@
 package com.example.restservice.Student_pkg;
 
 import com.example.restservice.School_pkg.School;
-import com.example.restservice.StudentProfile_pkg.StudentProfile;
+import com.example.restservice.subjects.Subject;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Student {
@@ -18,18 +23,23 @@ public class Student {
     @Enumerated(EnumType.STRING)
     private Status status = Status.ACTIVE;
 
-    @OneToOne(
-            mappedBy = "student",
-            cascade = CascadeType.ALL
-    )
-    private StudentProfile studentProfile;
+
     @ManyToOne
     @JoinColumn(name = "school_id")
     @JsonBackReference
     private School school;
+
+
+    @ManyToMany
+    @JsonBackReference
+    @JoinTable(name = "Student_subjects",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id")
+    )
+    private Set<Subject> subjectsSelected;
+
     public Student() {
     }
-
     public Status getStatus() {
         return status;
     }
@@ -85,13 +95,6 @@ public class Student {
         this.age = age;
     }
 
-    public StudentProfile getStudentProfile() {
-        return studentProfile;
-    }
-
-    public void setStudentProfile(StudentProfile studentProfile) {
-        this.studentProfile = studentProfile;
-    }
 
     public School getSchool() {
         return school;
@@ -99,5 +102,13 @@ public class Student {
 
     public void setSchool(School school) {
         this.school = school;
+    }
+
+    public Set<Subject> getSubjectsSelected() {
+        return subjectsSelected;
+    }
+
+    public void setSubjectsSelected(Set<Subject> subjectsSelected) {
+        this.subjectsSelected = subjectsSelected;
     }
 }
